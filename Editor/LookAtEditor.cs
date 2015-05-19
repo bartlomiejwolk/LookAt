@@ -24,6 +24,38 @@ namespace LookAtEx {
         #endregion
 
         #region UNITY MESSAGES
+        public void OnSceneGUI() {
+            LookAt script = (LookAt)target;
+
+            switch (script.Option) {
+                case Options.RotThreshold:
+                    Handles.color = Color.blue;
+                    Handles.Label(
+                        // TODO Add param for label position.
+                            script.transform.position + Vector3.up * 1.5f,
+                            "ThresholdAngle: " + script.ThresholdAngle.ToString(),
+                            script.LabelStyle);
+                    Handles.DrawWireArc(
+                            script.transform.position,
+                            script.transform.up,
+                        // Make the arc simetrical on the left and right
+                        // side of the player.
+                            Quaternion.AngleAxis(
+                                -script.ThresholdAngle / 2,
+                                Vector3.up) * script.transform.forward,
+                            script.ThresholdAngle,
+                            2);
+                    script.ThresholdAngle = Handles.ScaleValueHandle(
+                            script.ThresholdAngle,
+                            script.transform.position + script.transform.forward * 2,
+                            script.transform.rotation,
+                            1,
+                            Handles.ConeCap,
+                            1);
+                    break;
+            }
+        }
+
 
         public void OnEnable() {
             Script = (LookAt) target;
@@ -46,6 +78,9 @@ namespace LookAtEx {
             serializedObject.ApplyModifiedProperties();
         }
 
+        #endregion
+
+        #region INSPECTOR METHODS
         private void HandleOptionPopup() {
             switch (Script.Option) {
                 case Options.Standard:
@@ -123,39 +158,6 @@ namespace LookAtEx {
         private void DrawTargetTransformField() {
             EditorGUILayout.PropertyField(targetTransform);
         }
-
-        public void OnSceneGUI() {
-            LookAt script = (LookAt)target;
-
-            switch (script.Option) {
-                case Options.RotThreshold:
-                    Handles.color = Color.blue;
-                    Handles.Label(
-                        // TODO Add param for label position.
-                            script.transform.position + Vector3.up * 1.5f,
-                            "ThresholdAngle: " + script.ThresholdAngle.ToString(),
-                            script.LabelStyle);
-                    Handles.DrawWireArc(
-                            script.transform.position,
-                            script.transform.up,
-                        // Make the arc simetrical on the left and right
-                        // side of the player.
-                            Quaternion.AngleAxis(
-                                -script.ThresholdAngle / 2,
-                                Vector3.up) * script.transform.forward,
-                            script.ThresholdAngle,
-                            2);
-                    script.ThresholdAngle = Handles.ScaleValueHandle(
-                            script.ThresholdAngle,
-                            script.transform.position + script.transform.forward * 2,
-                            script.transform.rotation,
-                            1,
-                            Handles.ConeCap,
-                            1);
-                    break;
-            }
-        }
-
         #endregion
         #region METHODS
 
