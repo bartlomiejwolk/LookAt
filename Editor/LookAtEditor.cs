@@ -12,6 +12,12 @@ namespace LookAtEx {
     [CustomEditor(typeof(LookAt))]
     public class LookAtEditor : Editor {
 
+        #region PROPERTIES 
+
+        LookAt Script { get; set; }
+
+        #endregion
+
         #region SERIALIZED PROPERTIES
         private SerializedProperty labelStyle;
         private SerializedProperty targetTransform;
@@ -20,69 +26,102 @@ namespace LookAtEx {
         #region UNITY MESSAGES
 
         public void OnEnable() {
+            Script = (LookAt) target;
+
             labelStyle = serializedObject.FindProperty("labelStyle");
             targetTransform = serializedObject.FindProperty("targetTransform");
         }
 
         public override void OnInspectorGUI() {
-            LookAt script = (LookAt)target;
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(targetTransform);
-            EditorGUILayout.PropertyField(
-                    labelStyle,
-                    new GUIContent(
-                        "Label Style",
-                        "Style of the 'on scene' info label"),
-                    true);
-            script.Option = (Options)EditorGUILayout.EnumPopup(
-                    "Option",
-                    script.Option);
-            script.OverrideRoot = (Transform)EditorGUILayout.ObjectField(
-                    "Transform",
-                    script.OverrideRoot,
-                    typeof(Transform),
-                    true);
-            script.ClickInstantRot = EditorGUILayout.Toggle(
-                    "Instant Rotation",
-                    script.ClickInstantRot);
+            DrawTargetTransformField();
+            DrawLabelStyleControls();
+            DrawOptionPopup();
+            DrawOverrideRootField();
+            DrawInstantRotationToggle();
 
-            switch (script.Option) {
+            HandleOptionPopup();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void HandleOptionPopup() {
+            switch (Script.Option) {
                 case Options.Standard:
                     break;
                 case Options.YAxisOnly:
                     break;
                 case Options.RotWithSlerp:
-                    script.Speed = EditorGUILayout.FloatField(
-                            "Speed",
-                            script.Speed);
+                    DrawSpeedField();
                     break;
                 case Options.RotThreshold:
-                    script.MaxRotSpeed = EditorGUILayout.FloatField(
-                            "Max Rot. Speed",
-                            script.MaxRotSpeed);
-                    script.MinTimeToReach = EditorGUILayout.FloatField(
-                            "Min Time to Reach",
-                            script.MinTimeToReach);
-                    script.ThresholdAngle = EditorGUILayout.FloatField(
-                            "Threshold angle",
-                            script.ThresholdAngle);
+                    DrawMaxRotSpeedField();
+                    DrawMinTimeToReachField();
+                    DrawThresholdAngleField();
                     break;
                 case Options.RotWithSDA:
-                    script.MaxRotSpeed = EditorGUILayout.FloatField(
-                            "Max Rot. Speed",
-                            script.MaxRotSpeed);
-                    script.MinTimeToReach = EditorGUILayout.FloatField(
-                            "Min Time to Reach",
-                            script.MinTimeToReach);
+                    DrawMaxRotSpeedField();
+                    DrawMinTimeToReachField();
                     break;
             }
+        }
 
-            // Save changes
-            if (GUI.changed) {
-                EditorUtility.SetDirty(script);
-            }
-            serializedObject.ApplyModifiedProperties();
+        private void DrawThresholdAngleField() {
+            Script.ThresholdAngle = EditorGUILayout.FloatField(
+                "Threshold angle",
+                Script.ThresholdAngle);
+        }
+
+        private void DrawMinTimeToReachField() {
+            Script.MinTimeToReach = EditorGUILayout.FloatField(
+                "Min Time to Reach",
+                Script.MinTimeToReach);
+        }
+
+        private void DrawMaxRotSpeedField() {
+            Script.MaxRotSpeed = EditorGUILayout.FloatField(
+                "Max Rot. Speed",
+                Script.MaxRotSpeed);
+        }
+
+        private void DrawSpeedField() {
+            Script.Speed = EditorGUILayout.FloatField(
+                "Speed",
+                Script.Speed);
+        }
+
+        private void DrawInstantRotationToggle() {
+            Script.ClickInstantRot = EditorGUILayout.Toggle(
+                "Instant Rotation",
+                Script.ClickInstantRot);
+        }
+
+        private void DrawOverrideRootField() {
+            Script.OverrideRoot = (Transform) EditorGUILayout.ObjectField(
+                "Transform",
+                Script.OverrideRoot,
+                typeof (Transform),
+                true);
+        }
+
+        private void DrawOptionPopup() {
+            Script.Option = (Options) EditorGUILayout.EnumPopup(
+                "Option",
+                Script.Option);
+        }
+
+        private void DrawLabelStyleControls() {
+            EditorGUILayout.PropertyField(
+                labelStyle,
+                new GUIContent(
+                    "Label Style",
+                    "Style of the 'on scene' info label"),
+                true);
+        }
+
+        private void DrawTargetTransformField() {
+            EditorGUILayout.PropertyField(targetTransform);
         }
 
         public void OnSceneGUI() {
