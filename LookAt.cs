@@ -18,11 +18,11 @@ namespace LookAtEx {
     public class LookAt : MonoBehaviour {
 
         #region FIELDS
-        private Transform myTransform;
         #endregion
 
         #region INSPECTOR FIELDS
         /// Variable required by SmoothDampAngle().
+        // todo encapsulate
         private float velocity;
 
         /// Transform used to calculate angle between himself 
@@ -58,7 +58,7 @@ namespace LookAtEx {
         private Transform targetTransform;
 
         [SerializeField]
-        /// How LookAt controller should work.
+        // How LookAt controller should work.
         private Options option;
 
         /// GUIStyle options for scene view labels.
@@ -107,6 +107,9 @@ namespace LookAtEx {
             get { return labelStyle; }
             set { labelStyle = value; }
         }
+
+        private Transform MyTransform { get; set; }
+
         #endregion
 
         #region UNITY MESSAGES
@@ -118,7 +121,7 @@ namespace LookAtEx {
         }
 
         private void Start () {
-            myTransform = GetComponent<Transform>();
+            MyTransform = GetComponent<Transform>();
         }
         
         private void Update () {
@@ -128,12 +131,12 @@ namespace LookAtEx {
 
             switch (option) {
                 case Options.Standard:
-                    myTransform.LookAt(targetTransform);
+                    MyTransform.LookAt(targetTransform);
                     break;
                 case Options.YAxisOnly:
-                    Vector3 v = targetTransform.position - myTransform.position;
+                    Vector3 v = targetTransform.position - MyTransform.position;
                     v.x = v.z = 0.0f;
-                    myTransform.LookAt(targetTransform.transform.position - v); 
+                    MyTransform.LookAt(targetTransform.transform.position - v); 
                     break;
                 case Options.RotWithSlerp:
                     RotateWithSlerp();
@@ -155,15 +158,15 @@ namespace LookAtEx {
             // Direction to the target.
             Vector3 dir;
 
-            dir = targetTransform.position - myTransform.position;
+            dir = targetTransform.position - MyTransform.position;
             // Calculate rotation to the target.
             newRotation = Quaternion.LookRotation(dir).eulerAngles;
             // Rotate only around y axis.
             newRotation.x = 0;
             newRotation.z = 0;
             // Apply rotation.
-            myTransform.rotation = Quaternion.Slerp(
-                    myTransform.rotation,
+            MyTransform.rotation = Quaternion.Slerp(
+                    MyTransform.rotation,
                     Quaternion.Euler(newRotation),
                     Time.deltaTime * speed);
         }
@@ -177,16 +180,16 @@ namespace LookAtEx {
             Vector3 angles;
 
             // Calculate direction to the target.
-            dir = targetTransform.position - myTransform.position;
+            dir = targetTransform.position - MyTransform.position;
             // Calculate rotation to the target.
             newRotation = Quaternion.LookRotation(dir).eulerAngles;
             // Remember current rotation.
-            angles = myTransform.rotation.eulerAngles;
+            angles = MyTransform.rotation.eulerAngles;
             // Rotate only around y axis.
             angles.x = 0;
             angles.z = 0;
             // Apply rotation.
-            myTransform.rotation = Quaternion.Euler(
+            MyTransform.rotation = Quaternion.Euler(
                     angles.x,
                     Mathf.SmoothDampAngle(
                         angles.y,
@@ -212,8 +215,8 @@ namespace LookAtEx {
 
 
             hAngle = AngleAroundAxis(
-                    myTransform.forward,
-                    targetTransform.position - myTransform.position,
+                    MyTransform.forward,
+                    targetTransform.position - MyTransform.position,
                     Vector3.up);
 
             if (overrideRoot) {
@@ -224,15 +227,15 @@ namespace LookAtEx {
             }
             else {
                 hAngleCustom = AngleAroundAxis(
-                        myTransform.forward,
-                        targetTransform.position - myTransform.position,
+                        MyTransform.forward,
+                        targetTransform.position - MyTransform.position,
                         Vector3.up);
             }
 
             // On click, omit all the smoothing code and rotate
             // transform immediately.
             if (Input.GetKey(KeyCode.Mouse0) && clickInstantRot) {
-                myTransform.Rotate(0, hAngleCustom, 0);
+                MyTransform.Rotate(0, hAngleCustom, 0);
                 return;
             }
 
@@ -254,7 +257,7 @@ namespace LookAtEx {
                     maxRotSpeed);
 
             // Apply rotation to the transform.
-            myTransform.Rotate (0, newRotation, 0);
+            MyTransform.Rotate (0, newRotation, 0);
 
             // TODO Remove debug lines.
             /*Debug.DrawLine(
