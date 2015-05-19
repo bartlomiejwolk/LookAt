@@ -13,24 +13,24 @@ namespace LookAtEx {
     public class LookAtEditor : Editor {
 
         #region SERIALIZED PROPERTIES
-        private SerializedProperty _labelStyle;
-        private SerializedProperty _target;
+        private SerializedProperty labelStyle;
+        private SerializedProperty targetTransform;
         #endregion
 
         #region UNITY MESSAGES
 
         public void OnEnable() {
-            _labelStyle = serializedObject.FindProperty("_labelStyle");
-            _target = serializedObject.FindProperty("_target");
+            labelStyle = serializedObject.FindProperty("labelStyle");
+            targetTransform = serializedObject.FindProperty("targetTransform");
         }
 
         public override void OnInspectorGUI() {
             LookAt script = (LookAt)target;
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(_target);
+            EditorGUILayout.PropertyField(targetTransform);
             EditorGUILayout.PropertyField(
-                    _labelStyle,
+                    labelStyle,
                     new GUIContent(
                         "Label Style",
                         "Style of the 'on scene' info label"),
