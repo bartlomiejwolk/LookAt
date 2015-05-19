@@ -12,8 +12,12 @@ namespace LookAtEx {
     [CustomEditor(typeof(LookAt))]
     public class LookAtEditor : Editor {
 
+        #region SERIALIZED PROPERTIES
         private SerializedProperty _labelStyle;
         private SerializedProperty _target;
+        #endregion
+
+        #region UNITY MESSAGES
 
         public void OnEnable() {
             _labelStyle = serializedObject.FindProperty("_labelStyle");
@@ -112,5 +116,7 @@ namespace LookAtEx {
                     break;
             }
         }
+
+        #endregion
     }
 }

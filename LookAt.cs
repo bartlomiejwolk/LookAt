@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Collections;
 
 namespace LookAtEx {
-    /// Just like Unity's LookAt but with much more options.
+    /// Just like Unity's LookAt but with more options.
     ///
     /// Options available:
     /// - Standard
@@ -17,67 +17,14 @@ namespace LookAtEx {
     /// - RotWithSDA
     public class LookAt : MonoBehaviour {
 
+        #region FIELDS
+        // todo rename to myTransform
         private Transform _transform;
+        #endregion
 
-        [SerializeField]
-        /// How LookAt controller should work.
-        private Options _option;
-        public Options Option {
-            get { return _option; }
-            set { _option = value; }
-        }
-
-        // TODO Add public Vector3 field for selecting
-        // axis to lock.
-        
-        /// Object to look at.
-        [SerializeField]
-        private Transform _target;
-        public Transform Target {
-            get { return _target; }
-            set { _target = value; }
-        }
-
-        /// Dead zone angle where rotation don't accours.
-        [SerializeField]
-        private float _thresholdAngle;
-        public float ThresholdAngle {
-            get { return _thresholdAngle; }
-            set { _thresholdAngle = value; }
-        }
-
-        /// Rotation speed.
-        [SerializeField]
-        private float _speed;
-        public float Speed {
-            get { return _speed; }
-            set { _speed = value; }
-        }
-
-        /// Maximum rotation speed.
-        [SerializeField]
-        private float _maxRotSpeed;
-        public float MaxRotSpeed {
-            get { return _maxRotSpeed; }
-            set { _maxRotSpeed = value; }
-        }
-
-        /// Minimum time to reach target.
-        [SerializeField]
-        private float _minTimeToReach;
-        public float MinTimeToReach {
-            get { return _minTimeToReach; }
-            set { _minTimeToReach = value; }
-        }
-
-        /// When this is enabled, on mouse click a full rotation
-        /// is applied.
-        [SerializeField]
-        private bool _clickInstantRot;
-        public bool ClickInstantRot {
-            get { return _clickInstantRot; }
-            set { _clickInstantRot = value; }
-        }
+        #region INSPECTOR FIELDS
+        /// Variable required by SmoothDampAngle().
+        private float _velocity;
 
         /// Transform used to calculate angle between himself 
         /// and the target.
@@ -85,22 +32,85 @@ namespace LookAtEx {
         /// Use it if you need sth. else that root transform.
         [SerializeField]
         private Transform _overrideRoot;
-        public Transform OverrideRoot {
-            get { return _overrideRoot; }
-            set { _overrideRoot = value; }
-        }
 
-        /// Variable required by SmoothDampAngle().
-        private float _velocity;
+        /// When this is enabled, on mouse click a full rotation
+        /// is applied.
+        [SerializeField]
+        private bool _clickInstantRot;
+
+        /// Minimum time to reach target.
+        [SerializeField]
+        private float _minTimeToReach;
+
+        /// Maximum rotation speed.
+        [SerializeField]
+        private float _maxRotSpeed;
+
+        /// Rotation speed.
+        [SerializeField]
+        private float _speed;
+
+        /// Dead zone angle where rotation don't accours.
+        [SerializeField]
+        private float _thresholdAngle;
+
+        /// Object to look at.
+        [SerializeField]
+        private Transform _target;
+
+        [SerializeField]
+        /// How LookAt controller should work.
+        private Options _option;
 
         /// GUIStyle options for scene view labels.
         [SerializeField]
         private GUIStyle _labelStyle;
+
+        #endregion
+
+        #region PROPERTIES
+        public Options Option {
+            get { return _option; }
+            set { _option = value; }
+        }
+
+        // TODO Add public Vector3 field for selecting
+        // axis to lock.
+        public Transform Target {
+            get { return _target; }
+            set { _target = value; }
+        }
+        public float ThresholdAngle {
+            get { return _thresholdAngle; }
+            set { _thresholdAngle = value; }
+        }
+        public float Speed {
+            get { return _speed; }
+            set { _speed = value; }
+        }
+        public float MaxRotSpeed {
+            get { return _maxRotSpeed; }
+            set { _maxRotSpeed = value; }
+        }
+        public float MinTimeToReach {
+            get { return _minTimeToReach; }
+            set { _minTimeToReach = value; }
+        }
+        public bool ClickInstantRot {
+            get { return _clickInstantRot; }
+            set { _clickInstantRot = value; }
+        }
+        public Transform OverrideRoot {
+            get { return _overrideRoot; }
+            set { _overrideRoot = value; }
+        }
         public GUIStyle LabelStyle {
             get { return _labelStyle; }
             set { _labelStyle = value; }
         }
+        #endregion
 
+        #region UNITY MESSAGES
         private void Awake() {
             if (!_target) {
                 // todo Add Utilities class
@@ -137,7 +147,9 @@ namespace LookAtEx {
                     break;
             }
         }
+        #endregion
 
+        #region METHODS
         private void RotateWithSlerp() {
             // Rotation to be applied.
             Vector3 newRotation;
@@ -277,6 +289,7 @@ namespace LookAtEx {
             // Return angle multiplied with 1 or -1
             return angle * (Vector3.Dot(axis, Vector3.Cross(dirA, dirB)) < 0 ? -1 : 1);
         }
+        #endregion
     }
 
 }
