@@ -1,61 +1,29 @@
 ﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
-//  
-// This file is part of the LookAt extension for Unity.
-// Licensed under the MIT license. See LICENSE file in the project root folder.
+// 
+// This file is part of the LookAt extension for Unity. Licensed under the MIT
+// license. See LICENSE file in the project root folder.
 
-using UnityEngine;
-using System.Collections;
 using UnityEditor;
+using UnityEngine;
 
 namespace LookAtEx {
 
-    [CustomEditor(typeof(LookAt))]
+    [CustomEditor(typeof (LookAt))]
     public class LookAtEditor : Editor {
+        #region PROPERTIES
 
-        #region PROPERTIES 
+        private LookAt Script { get; set; }
 
-        LookAt Script { get; set; }
-
-        #endregion
+        #endregion PROPERTIES
 
         #region SERIALIZED PROPERTIES
+
         private SerializedProperty labelStyle;
         private SerializedProperty targetTransform;
-        #endregion
+
+        #endregion SERIALIZED PROPERTIES
 
         #region UNITY MESSAGES
-        public void OnSceneGUI() {
-            LookAt script = (LookAt)target;
-
-            switch (script.Option) {
-                case Options.RotThreshold:
-                    Handles.color = Color.blue;
-                    Handles.Label(
-                        // TODO Add param for label position.
-                            script.transform.position + Vector3.up * 1.5f,
-                            "ThresholdAngle: " + script.ThresholdAngle.ToString(),
-                            script.LabelStyle);
-                    Handles.DrawWireArc(
-                            script.transform.position,
-                            script.transform.up,
-                        // Make the arc simetrical on the left and right
-                        // side of the player.
-                            Quaternion.AngleAxis(
-                                -script.ThresholdAngle / 2,
-                                Vector3.up) * script.transform.forward,
-                            script.ThresholdAngle,
-                            2);
-                    script.ThresholdAngle = Handles.ScaleValueHandle(
-                            script.ThresholdAngle,
-                            script.transform.position + script.transform.forward * 2,
-                            script.transform.rotation,
-                            1,
-                            Handles.ConeCap,
-                            1);
-                    break;
-            }
-        }
-
 
         public void OnEnable() {
             Script = (LookAt) target;
@@ -78,61 +46,40 @@ namespace LookAtEx {
             serializedObject.ApplyModifiedProperties();
         }
 
-        #endregion
-
-        #region INSPECTOR METHODS
-        private void HandleOptionPopup() {
+        // todo refactor
+        public void OnSceneGUI() {
             switch (Script.Option) {
-                case Options.Standard:
-                    break;
-                case Options.YAxisOnly:
-                    break;
-                case Options.RotWithSlerp:
-                    DrawSpeedField();
-                    break;
                 case Options.RotThreshold:
-                    DrawMaxRotSpeedField();
-                    DrawMinTimeToReachField();
-                    DrawThresholdAngleField();
-                    break;
-                case Options.RotWithSDA:
-                    DrawMaxRotSpeedField();
-                    DrawMinTimeToReachField();
+                    Handles.color = Color.blue;
+                    Handles.Label(
+                        // TODO Add param for label position.
+                        Script.transform.position + Vector3.up * 1.5f,
+                        "ThresholdAngle: " + Script.ThresholdAngle,
+                        Script.LabelStyle);
+                    Handles.DrawWireArc(
+                        Script.transform.position,
+                        Script.transform.up,
+                        // Make the arc simetrical on the left and right side
+                        // of the player.
+                        Quaternion.AngleAxis(
+                            -Script.ThresholdAngle / 2,
+                            Vector3.up) * Script.transform.forward,
+                        Script.ThresholdAngle,
+                        2);
+                    Script.ThresholdAngle = Handles.ScaleValueHandle(
+                        Script.ThresholdAngle,
+                        Script.transform.position + Script.transform.forward * 2,
+                        Script.transform.rotation,
+                        1,
+                        Handles.ConeCap,
+                        1);
                     break;
             }
         }
 
-        private void DrawThresholdAngleField() {
-            Script.ThresholdAngle = EditorGUILayout.FloatField(
-                new GUIContent(
-                    "Threshold Angle",
-                    ""),
-                Script.ThresholdAngle);
-        }
+        #endregion UNITY MESSAGES
 
-        private void DrawMinTimeToReachField() {
-            Script.MinTimeToReach = EditorGUILayout.FloatField(
-                new GUIContent(
-                "Min Time to Reach",
-                ""),
-                Script.MinTimeToReach);
-        }
-
-        private void DrawMaxRotSpeedField() {
-            Script.MaxRotSpeed = EditorGUILayout.FloatField(
-                new GUIContent(
-                "Max Rot. Speed",
-                ""),
-                Script.MaxRotSpeed);
-        }
-
-        private void DrawSpeedField() {
-            Script.Speed = EditorGUILayout.FloatField(
-                new GUIContent(
-                "Speed",
-                    ""),
-                Script.Speed);
-        }
+        #region INSPECTOR METHODS
 
         private void DrawInstantRotationToggle() {
             Script.ClickInstantRot = EditorGUILayout.Toggle(
@@ -140,24 +87,6 @@ namespace LookAtEx {
                     "Instant Rotation",
                     ""),
                 Script.ClickInstantRot);
-        }
-
-        private void DrawOverrideRootField() {
-            Script.OverrideRoot = (Transform) EditorGUILayout.ObjectField(
-                new GUIContent(
-                    "Transform",
-                    ""), 
-                Script.OverrideRoot,
-                typeof (Transform),
-                true);
-        }
-
-        private void DrawOptionPopup() {
-            Script.Option = (Options) EditorGUILayout.EnumPopup(
-                new GUIContent(
-                    "Option",
-                    ""),
-                Script.Option);
         }
 
         private void DrawLabelStyleControls() {
@@ -169,6 +98,48 @@ namespace LookAtEx {
                 true);
         }
 
+        private void DrawMaxRotSpeedField() {
+            Script.MaxRotSpeed = EditorGUILayout.FloatField(
+                new GUIContent(
+                    "Max Rot. Speed",
+                    ""),
+                Script.MaxRotSpeed);
+        }
+
+        private void DrawMinTimeToReachField() {
+            Script.MinTimeToReach = EditorGUILayout.FloatField(
+                new GUIContent(
+                    "Min Time to Reach",
+                    ""),
+                Script.MinTimeToReach);
+        }
+
+        private void DrawOptionPopup() {
+            Script.Option = (Options) EditorGUILayout.EnumPopup(
+                new GUIContent(
+                    "Option",
+                    ""),
+                Script.Option);
+        }
+
+        private void DrawOverrideRootField() {
+            Script.OverrideRoot = (Transform) EditorGUILayout.ObjectField(
+                new GUIContent(
+                    "Transform",
+                    ""),
+                Script.OverrideRoot,
+                typeof (Transform),
+                true);
+        }
+
+        private void DrawSpeedField() {
+            Script.Speed = EditorGUILayout.FloatField(
+                new GUIContent(
+                    "Speed",
+                    ""),
+                Script.Speed);
+        }
+
         private void DrawTargetTransformField() {
             EditorGUILayout.PropertyField(
                 targetTransform,
@@ -176,16 +147,52 @@ namespace LookAtEx {
                     "Target Transform",
                     ""));
         }
-        #endregion
+
+        private void DrawThresholdAngleField() {
+            Script.ThresholdAngle = EditorGUILayout.FloatField(
+                new GUIContent(
+                    "Threshold Angle",
+                    ""),
+                Script.ThresholdAngle);
+        }
+
+        private void HandleOptionPopup() {
+            switch (Script.Option) {
+                case Options.Standard:
+                    break;
+
+                case Options.YAxisOnly:
+                    break;
+
+                case Options.RotWithSlerp:
+                    DrawSpeedField();
+                    break;
+
+                case Options.RotThreshold:
+                    DrawMaxRotSpeedField();
+                    DrawMinTimeToReachField();
+                    DrawThresholdAngleField();
+                    break;
+
+                case Options.RotWithSDA:
+                    DrawMaxRotSpeedField();
+                    DrawMinTimeToReachField();
+                    break;
+            }
+        }
+
+        #endregion INSPECTOR METHODS
+
         #region METHODS
 
         [MenuItem("Component/LookAt")]
         private static void AddLookAtComponent() {
             if (Selection.activeGameObject != null) {
-                Selection.activeGameObject.AddComponent(typeof(LookAt));
+                Selection.activeGameObject.AddComponent(typeof (LookAt));
             }
         }
 
         #endregion METHODS
     }
+
 }
