@@ -157,5 +157,15 @@ namespace LookAtEx {
         }
 
         #endregion
+        #region METHODS
+
+        [MenuItem("Component/LookAt")]
+        private static void AddLookAtComponent() {
+            if (Selection.activeGameObject != null) {
+                Selection.activeGameObject.AddComponent(typeof(LookAt));
+            }
+        }
+
+        #endregion METHODS
     }
 }
