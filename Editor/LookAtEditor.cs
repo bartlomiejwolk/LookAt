@@ -20,6 +20,7 @@ namespace LookAtEx {
 
         private SerializedProperty labelStyle;
         private SerializedProperty targetTransform;
+        private SerializedProperty description;
 
         #endregion SERIALIZED PROPERTIES
 
@@ -30,10 +31,16 @@ namespace LookAtEx {
 
             labelStyle = serializedObject.FindProperty("labelStyle");
             targetTransform = serializedObject.FindProperty("targetTransform");
+            description = serializedObject.FindProperty("description");
         }
 
         public override void OnInspectorGUI() {
             serializedObject.Update();
+
+            DrawVersionLabel();
+            DrawDescriptionTextArea();
+
+            EditorGUILayout.Space();
 
             DrawTargetTransformField();
             DrawLabelStyleControls();
@@ -181,6 +188,18 @@ namespace LookAtEx {
             }
         }
 
+        private void DrawVersionLabel() {
+            EditorGUILayout.LabelField(
+                string.Format(
+                    "{0} ({1})",
+                    LookAt.Version,
+                    LookAt.Extension));
+        }
+
+        private void DrawDescriptionTextArea() {
+            description.stringValue = EditorGUILayout.TextArea(
+                description.stringValue);
+        }
         #endregion INSPECTOR METHODS
 
         #region METHODS

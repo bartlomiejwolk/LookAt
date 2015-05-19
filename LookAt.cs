@@ -16,6 +16,14 @@ namespace LookAtEx {
     /// - RotThreshold
     /// - RotWithSDA
     public class LookAt : MonoBehaviour {
+
+        #region CONSTANTS
+
+        public const string Version = "v0.1.0";
+        public const string Extension = "LookAt";
+
+        #endregion
+
         #region INSPECTOR FIELDS
 
         /// When this is enabled, on mouse click a full rotation is applied.
@@ -59,6 +67,9 @@ namespace LookAtEx {
         /// Variable required by SmoothDampAngle().
         // todo encapsulate
         private float velocity;
+
+        [SerializeField]
+        private string description = "Description";
 
         #endregion INSPECTOR FIELDS
 
@@ -111,6 +122,11 @@ namespace LookAtEx {
         }
 
         private Transform MyTransform { get; set; }
+
+        public string Description {
+            get { return description; }
+            set { description = value; }
+        }
 
         #endregion PROPERTIES
 
