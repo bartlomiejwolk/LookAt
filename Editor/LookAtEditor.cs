@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
+//  
+// This file is part of the LookAt extension for Unity.
+// Licensed under the MIT license. See LICENSE file in the project root folder.
+
+using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
@@ -26,7 +31,7 @@ namespace LookAtEx {
                         "Label Style",
                         "Style of the 'on scene' info label"),
                     true);
-            script.Option = (LookAt.Options)EditorGUILayout.EnumPopup(
+            script.Option = (Options)EditorGUILayout.EnumPopup(
                     "Option",
                     script.Option);
             script.OverrideRoot = (Transform)EditorGUILayout.ObjectField(
@@ -39,16 +44,16 @@ namespace LookAtEx {
                     script.ClickInstantRot);
 
             switch (script.Option) {
-                case LookAt.Options.Standard:
+                case Options.Standard:
                     break;
-                case LookAt.Options.YAxisOnly:
+                case Options.YAxisOnly:
                     break;
-                case LookAt.Options.RotWithSlerp:
+                case Options.RotWithSlerp:
                     script.Speed = EditorGUILayout.FloatField(
                             "Speed",
                             script.Speed);
                     break;
-                case LookAt.Options.RotThreshold:
+                case Options.RotThreshold:
                     script.MaxRotSpeed = EditorGUILayout.FloatField(
                             "Max Rot. Speed",
                             script.MaxRotSpeed);
@@ -59,7 +64,7 @@ namespace LookAtEx {
                             "Threshold angle",
                             script.ThresholdAngle);
                     break;
-                case LookAt.Options.RotWithSDA:
+                case Options.RotWithSDA:
                     script.MaxRotSpeed = EditorGUILayout.FloatField(
                             "Max Rot. Speed",
                             script.MaxRotSpeed);
@@ -80,7 +85,7 @@ namespace LookAtEx {
             LookAt script = (LookAt)target;
 
             switch (script.Option) {
-                case LookAt.Options.RotThreshold:
+                case Options.RotThreshold:
                     Handles.color = Color.blue;
                     Handles.Label(
                         // TODO Add param for label position.
