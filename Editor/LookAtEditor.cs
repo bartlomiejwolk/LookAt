@@ -104,37 +104,49 @@ namespace LookAtEx {
 
         private void DrawThresholdAngleField() {
             Script.ThresholdAngle = EditorGUILayout.FloatField(
-                "Threshold angle",
+                new GUIContent(
+                    "Threshold Angle",
+                    ""),
                 Script.ThresholdAngle);
         }
 
         private void DrawMinTimeToReachField() {
             Script.MinTimeToReach = EditorGUILayout.FloatField(
+                new GUIContent(
                 "Min Time to Reach",
+                ""),
                 Script.MinTimeToReach);
         }
 
         private void DrawMaxRotSpeedField() {
             Script.MaxRotSpeed = EditorGUILayout.FloatField(
+                new GUIContent(
                 "Max Rot. Speed",
+                ""),
                 Script.MaxRotSpeed);
         }
 
         private void DrawSpeedField() {
             Script.Speed = EditorGUILayout.FloatField(
+                new GUIContent(
                 "Speed",
+                    ""),
                 Script.Speed);
         }
 
         private void DrawInstantRotationToggle() {
             Script.ClickInstantRot = EditorGUILayout.Toggle(
-                "Instant Rotation",
+                new GUIContent(
+                    "Instant Rotation",
+                    ""),
                 Script.ClickInstantRot);
         }
 
         private void DrawOverrideRootField() {
             Script.OverrideRoot = (Transform) EditorGUILayout.ObjectField(
-                "Transform",
+                new GUIContent(
+                    "Transform",
+                    ""), 
                 Script.OverrideRoot,
                 typeof (Transform),
                 true);
@@ -142,7 +154,9 @@ namespace LookAtEx {
 
         private void DrawOptionPopup() {
             Script.Option = (Options) EditorGUILayout.EnumPopup(
-                "Option",
+                new GUIContent(
+                    "Option",
+                    ""),
                 Script.Option);
         }
 
@@ -156,7 +170,11 @@ namespace LookAtEx {
         }
 
         private void DrawTargetTransformField() {
-            EditorGUILayout.PropertyField(targetTransform);
+            EditorGUILayout.PropertyField(
+                targetTransform,
+                new GUIContent(
+                    "Target Transform",
+                    ""));
         }
         #endregion
         #region METHODS
